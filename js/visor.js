@@ -15,7 +15,7 @@ const $ = s => document.querySelector(s);
 const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
 /* ---------------- Simbología ---------------- */
-const COL = { guinda: '#611232', guinda2: '#8E1D3F', dorado: '#A57F2C', cafe: '#32260D', compat: '#8FD16A', incompat: '#C9500E', ejido: '#E8740C', loc: '#FFD400' };
+const COL = { ugaLine: '#98E600', guinda: '#611232', guinda2: '#8E1D3F', dorado: '#A57F2C', cafe: '#32260D', compat: '#8FD16A', incompat: '#C9500E', ejido: '#E8740C', loc: '#FFD400' };
 const POL = {
   'Aprovechamiento sustentable': { c: '#F2D33B', fill: '#F2D33B' },
   'Preservación':               { c: '#A6D96A', fill: '#A6D96A' },
@@ -46,7 +46,7 @@ function swatch(pol, size = 18, shape = 'rect') {
 }
 
 /* ---------------- Estado ---------------- */
-const S = { theme: 'contorno', transp: 30, uso: null, sel: null, selEj: null, base: 'satref', show: { uga: true, ugaLbl: true, ej: true, ejLbl: true, loc: true, locLbl: true } };
+const S = { theme: 'contorno', transp: 30, uso: null, sel: null, selEj: null, base: 'satref', show: { uga: true, ugaLbl: true, ej: false, ejLbl: true, loc: false, locLbl: true } };
 
 /* ---------------- Mapa ---------------- */
 const map = L.map('map', { zoomControl: true, minZoom: 8, maxZoom: 19, zoomSnap: 0.25, attributionControl: true });
@@ -59,7 +59,6 @@ L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
 
 const BASES = {
   osm: { name: 'Referencia (OpenStreetMap)', layers: [L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' })] },
-  carto: { name: 'Gris claro (CARTO)', layers: [L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19, subdomains: 'abcd', attribution: '&copy; OpenStreetMap &copy; CARTO' })] },
   sat: { name: 'Imagen de satélite', sat: true, layers: [L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, maxNativeZoom: 18, attribution: 'Imagen &copy; Esri, Maxar, Earthstar Geographics' })] },
   satref: { name: 'Satélite con referencias', sat: true, layers: [
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, maxNativeZoom: 18, attribution: 'Imagen &copy; Esri' }),
@@ -87,7 +86,7 @@ function ugaStyle(f) {
     const P = POL[p.pol] || { fill: '#bbb' };
     st = { fillColor: P.fill, fillOpacity: op, color: '#3b2f22', weight: .6, opacity: .8 };
   } else {
-    st = { fillColor: '#ffffff', fillOpacity: 0, color: COL.guinda2, weight: 1.7, opacity: Math.max(op, .08) };
+    st = { fillColor: '#ffffff', fillOpacity: 0, color: COL.ugaLine, weight: 1.7, opacity: Math.max(op, .08) };
   }
   if (sel) Object.assign(st, { color: COL.dorado, weight: 4.5, opacity: 1 });
   return st;
@@ -118,7 +117,7 @@ const ejLayer = L.geoJSON(EJ, {
     ejByName.set(f.properties.n, { f, layer });
     layer.on('click', e => { L.DomEvent.stopPropagation(e); selectEjido(f.properties.n, { latlng: e.latlng, noZoom: true }); });
   }
-}).addTo(map);
+});
 
 /* ---------------- Capa Localidades ---------------- */
 const locRad = p => p >= 10000 ? 8 : p >= 2500 ? 6.5 : p >= 500 ? 5.2 : p >= 100 ? 4.2 : 3.4;
@@ -130,7 +129,7 @@ const locLayer = L.geoJSON(LO, {
     locs.push({ f, layer });
     layer.on('click', e => { L.DomEvent.stopPropagation(e); openLocPopup(f, layer); });
   }
-}).addTo(map);
+});
 
 /* ---------------- Etiquetas con jerarquía (declutter) ---------------- */
 const labels = [];
@@ -201,11 +200,11 @@ const Layers = L.Control.extend({
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg>Capas</button>
       <div class="lyr-panel hidden" id="lyrPanel">
         <h5>Capas temáticas</h5>
-        ${sw('lyUga', 'Unidades de Gestión Ambiental', true, 'border:2px solid #8E1D3F;background:#fff')}
-        ${ck('lyUgaLbl', 'Etiquetas UGA_FIN', true)}
-        ${sw('lyEj', 'Ejidos (RAN)', true, 'border:2px dashed #E8740C;background:#fff')}
+        ${sw('lyUga', 'Unidades de Gestión Ambiental', true, 'border:2px solid #98E600;background:#fff')}
+        ${ck('lyUgaLbl', 'Número de UGA', true)}
+        ${sw('lyEj', 'Ejidos (RAN)', false, 'border:2px dashed #E8740C;background:#fff')}
         ${ck('lyEjLbl', 'Nombres de ejidos', true)}
-        ${sw('lyLoc', 'Localidades ITER', true, 'background:#FFD400;border:1.5px solid #4a3a12;border-radius:50%;width:12px;flex-basis:12px')}
+        ${sw('lyLoc', 'Localidades ITER', false, 'background:#FFD400;border:1.5px solid #4a3a12;border-radius:50%;width:12px;flex-basis:12px')}
         ${ck('lyLocLbl', 'Nombres de localidades', true)}
         <h5>Mapa base</h5>
         ${Object.entries(BASES).map(([k, b]) => `<label><input type="radio" name="base" value="${k}" ${k === S.base ? 'checked' : ''}> ${b.name}</label>`).join('')}
@@ -249,8 +248,7 @@ function renderLegend() {
     } else if (S.theme === 'politica') {
       h += `<h4>Política ambiental</h4>` + POL_ORDER.map(p => `<div class="li">${swatch(p)} ${esc(polLabel(p))}</div>`).join('');
     } else {
-      h += `<h4>Unidades de Gestión Ambiental</h4><div class="li"><svg width="22" height="14"><rect x="1" y="1" width="20" height="12" rx="2" fill="none" stroke="${COL.guinda2}" stroke-width="2"/></svg> Límite de UGA</div>
-        <div class="li"><svg width="22" height="14"><text x="11" y="11" text-anchor="middle" font-size="11" font-weight="800" fill="#000" stroke="#fff" stroke-width="3" paint-order="stroke">12</text></svg> Número UGA_FIN</div>`;
+      h += `<h4>Unidades de Gestión Ambiental</h4><div class="li"><svg width="22" height="14"><rect x="1" y="1" width="20" height="12" rx="2" fill="none" stroke="${COL.ugaLine}" stroke-width="2"/></svg> Límite de UGA</div>`;
     }
   }
   if (S.show.ej || S.show.loc) h += `<div class="sep"></div>`;
