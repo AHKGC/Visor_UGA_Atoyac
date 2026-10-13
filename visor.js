@@ -15,7 +15,7 @@ const $ = s => document.querySelector(s);
 const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
 /* ---------------- Simbología ---------------- */
-const COL = { guinda: '#611232', guinda2: '#8E1D3F', dorado: '#A57F2C', cafe: '#32260D', compat: '#8FD16A', incompat: '#C9500E', ejido: '#E8740C', loc: '#FFD400' };
+const COL = { ugaLine: '#98E600', guinda: '#611232', guinda2: '#8E1D3F', dorado: '#A57F2C', cafe: '#32260D', compat: '#8FD16A', incompat: '#C9500E', ejido: '#E8740C', loc: '#FFD400' };
 const POL = {
   'Aprovechamiento sustentable': { c: '#F2D33B', fill: '#F2D33B' },
   'Preservación':               { c: '#A6D96A', fill: '#A6D96A' },
@@ -86,7 +86,7 @@ function ugaStyle(f) {
     const P = POL[p.pol] || { fill: '#bbb' };
     st = { fillColor: P.fill, fillOpacity: op, color: '#3b2f22', weight: .6, opacity: .8 };
   } else {
-    st = { fillColor: '#ffffff', fillOpacity: 0, color: COL.guinda2, weight: 1.7, opacity: Math.max(op, .08) };
+    st = { fillColor: '#ffffff', fillOpacity: 0, color: COL.ugaLine, weight: 1.7, opacity: Math.max(op, .08) };
   }
   if (sel) Object.assign(st, { color: COL.dorado, weight: 4.5, opacity: 1 });
   return st;
@@ -200,7 +200,7 @@ const Layers = L.Control.extend({
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg>Capas</button>
       <div class="lyr-panel hidden" id="lyrPanel">
         <h5>Capas temáticas</h5>
-        ${sw('lyUga', 'Unidades de Gestión Ambiental', true, 'border:2px solid #8E1D3F;background:#fff')}
+        ${sw('lyUga', 'Unidades de Gestión Ambiental', true, 'border:2px solid #98E600;background:#fff')}
         ${ck('lyUgaLbl', 'Número de UGA', true)}
         ${sw('lyEj', 'Ejidos (RAN)', false, 'border:2px dashed #E8740C;background:#fff')}
         ${ck('lyEjLbl', 'Nombres de ejidos', true)}
@@ -248,7 +248,7 @@ function renderLegend() {
     } else if (S.theme === 'politica') {
       h += `<h4>Política ambiental</h4>` + POL_ORDER.map(p => `<div class="li">${swatch(p)} ${esc(polLabel(p))}</div>`).join('');
     } else {
-      h += `<h4>Unidades de Gestión Ambiental</h4><div class="li"><svg width="22" height="14"><rect x="1" y="1" width="20" height="12" rx="2" fill="none" stroke="${COL.guinda2}" stroke-width="2"/></svg> Límite de UGA</div>`;
+      h += `<h4>Unidades de Gestión Ambiental</h4><div class="li"><svg width="22" height="14"><rect x="1" y="1" width="20" height="12" rx="2" fill="none" stroke="${COL.ugaLine}" stroke-width="2"/></svg> Límite de UGA</div>`;
     }
   }
   if (S.show.ej || S.show.loc) h += `<div class="sep"></div>`;
