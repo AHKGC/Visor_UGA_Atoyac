@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visor UGA · POEL Atoyac de Álvarez</title>
+<meta name="description" content="Visor de Unidades de Gestión Ambiental del Programa de Ordenamiento Ecológico Local de Atoyac de Álvarez, Guerrero.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/visor.css">
+</head>
+<body>
+<header class="topbar">
+  <button class="icon-btn" id="btnPanel" aria-label="Mostrar u ocultar buscadores" title="Buscadores" aria-expanded="false">
+    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="brand">
+    <div>
+      <h1>Visor de Unidades de Gestión Ambiental</h1>
+      <p>Programa de Ordenamiento Ecológico Local · Atoyac de Álvarez, Guerrero</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ===== Panel izquierdo: buscadores ===== -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="usos" role="tab">Usos</button>
+      <button class="tab" data-tab="uga" role="tab">UGA</button>
+      <button class="tab" data-tab="ejidos" role="tab">Ejidos</button>
+      <button class="tab" data-tab="loc" role="tab">Localidades</button>
+    </nav>
+
+    <section class="tabpane active" id="tab-usos">
+      <div class="pane-head">
+        <h2>Compatibilidad de usos del suelo</h2>
+        <p>Selecciona un uso para ver en qué UGA es compatible o incompatible.</p>
+      </div>
+      <div class="search"><input id="qUsos" type="search" placeholder="Buscar uso o clave (p. ej. café, AshR)…" autocomplete="off"></div>
+      <div class="result-box hidden" id="usoResult"></div>
+      <ul class="list" id="listUsos"></ul>
+    </section>
+
+    <section class="tabpane" id="tab-uga">
+      <div class="pane-head">
+        <h2>Buscar por UGA</h2>
+        <p>Número de UGA (UGA_FIN), política o grupo.</p>
+      </div>
+      <div class="search"><input id="qUga" type="search" placeholder="Ej. 25, Restauración, cafetaleras…" autocomplete="off"></div>
+      <div class="chips-filter" id="polFilter"></div>
+      <ul class="list" id="listUga"></ul>
+    </section>
+
+    <section class="tabpane" id="tab-ejidos">
+      <div class="pane-head">
+        <h2>Buscar por ejido</h2>
+        <p>Núcleos agrarios (RAN) dentro del municipio.</p>
+      </div>
+      <div class="search"><input id="qEj" type="search" placeholder="Nombre del ejido…" autocomplete="off"></div>
+      <div class="result-box hidden" id="ejResult"></div>
+      <ul class="list" id="listEj"></ul>
+    </section>
+
+    <section class="tabpane" id="tab-loc">
+      <div class="pane-head">
+        <h2>Buscar por localidad</h2>
+        <p>Localidades ITER (INEGI), ordenadas por población.</p>
+      </div>
+      <div class="search"><input id="qLoc" type="search" placeholder="Nombre de la localidad…" autocomplete="off"></div>
+      <ul class="list" id="listLoc"></ul>
+    </section>
+    <footer class="side-foot">Modelo UGA · versión <span id="verModelo"></span> · WGS84</footer>
+  </aside>
+
+  <!-- ===== Mapa ===== -->
+  <main class="map-wrap">
+    <div id="map"></div>
+
+    <!-- Control de tema (centro superior) -->
+    <div class="theme-bar" id="themeBar">
+      <span class="tb-label">Tema</span>
+      <div class="seg" role="group" aria-label="Tema de representación">
+        <button data-theme="contorno" class="active">Contorno</button>
+        <button data-theme="politica">Política</button>
+      </div>
+      <label class="op">
+        <span>Transparencia</span>
+        <input type="range" id="opRange" min="0" max="100" value="30">
+        <output id="opOut">30%</output>
+      </label>
+    </div>
+
+    <!-- Aviso modo uso -->
+    <div class="uso-banner hidden" id="usoBanner"></div>
+
+    <!-- Leyenda -->
+    <div class="legend" id="legend"></div>
+  </main>
+
+  <!-- ===== Panel derecho: ficha ===== -->
+  <aside class="ficha" id="ficha" aria-hidden="true">
+    <button class="ficha-close" id="fichaClose" aria-label="Cerrar ficha">×</button>
+    <div class="ficha-body" id="fichaBody"></div>
+  </aside>
+</div>
+
+<!-- Ventana emergente de criterios / estrategias / usos -->
+<div class="modal hidden" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <button class="modal-x" id="modalX" aria-label="Cerrar">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data/catalogos.js"></script>
+<script src="data/ugas.js"></script>
+<script src="data/ejidos.js"></script>
+<script src="data/localidades.js"></script>
+<script src="js/visor.js"></script>
+</body>
+</html>
